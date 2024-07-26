@@ -1,0 +1,98 @@
+In operating systems that use paging for memory management, page replacement algorithm is needed to decide which page needs to be replaced when the new page comes in. 
+Whenever a new page is referred and is not present in memory, the page fault occurs and Operating System replaces one of the existing pages with a newly needed page.
+Given a sequence of pages in an array pages[] of length N and memory capacity C, find the number of page faults using Least Recently Used (LRU) Algorithm. 
+Note:- Before solving this example revising the OS LRU cache mechanism is recommended.
+CODE:
+class Node{
+    public: 
+        Node* next;
+        Node* prev;
+        int val;
+        int key;
+        Node():next(NULL),prev(NULL){}
+        Node(int key, int val): val(val),key(key),next(NULL),prev(NULL){}
+};
+class LRUCache {
+    Node *head, *end;
+    unordered_map<int,Node*> m;
+    int pageFault;
+    int cap;
+    void putFront(Node* node){
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+        addNode(node);
+    }
+    void addNode(Node* node){
+        node->next = head->next;
+        node->prev = head;
+        head->next->prev = node;
+        head->next = node;
+    }
+    void deleteLast(){
+        Node* del = end->prev;
+        end->prev = del->prev;
+        del->prev->next = end;
+        m.erase(del->key);
+        delete del;
+    }
+    void printList(){
+        Node* temp = head;
+        while(temp){
+            cout<<"["<<temp->key<<","<<temp->val<<"],";
+            temp = temp->next;
+        }
+        cout<<endl;
+    }
+public:
+    LRUCache(int capacity) {
+        head = new Node(-1,-1);
+        end = new Node(-1,-1);
+        head->next = end;
+        end->prev = head;
+        m = unordered_map<int,Node*>(); 
+        cap = capacity;  
+        pageFault = 0;
+    }
+    int get(int key) {
+        if(m.find(key) == m.end()) return -1;
+        Node* temp = m[key];
+        putFront(temp);
+        return temp->val;
+    }
+    bool exist(int key){
+        return (m.find(key) != m.end());
+    }
+    
+    void put(int key, int value) {
+        if(m.find(key) != m.end()){
+            Node* temp = m[key];
+            temp->val = value;
+            putFront(temp);
+        }
+        else{
+            Node* temp = new Node(key,value);
+            m[key] = temp;
+            addNode(temp);
+            cap--;
+            if(cap < 0){
+                deleteLast();
+                cap++;
+            }
+            pageFault++;
+        }
+        return;
+    }
+    int getPageFaults(){
+        return pageFault;
+    }
+};
+class Solution{
+public:
+    int pageFaults(int N, int C, int pages[]){
+        LRUCache myLRU(C);
+        int ret = 0;
+        for(int i = 0;i<N;i++)
+            myLRU.put(pages[i],pages[i]);
+        return myLRU.getPageFaults();
+    }
+};
