@@ -1,0 +1,35 @@
+There is one meeting room in a firm. There are n meetings in the form of (start[i], end[i]) where start[i] is start time of meeting i and end[i] is finish time of meeting i.
+What is the maximum number of meetings that can be accommodated in the meeting room when only one meeting can be held in the meeting room at a particular time?
+Return the maximum number of meetings that can be held in the meeting room.
+CODE:
+class Solution 
+{
+   
+    public static int maxMeetings(int start[], int end[], int n)
+    {
+      PriorityQueue<Node> pq=new PriorityQueue<Node>((a,b)->a.end-b.end);
+      for(int i=0;i<n;i++){
+          pq.add(new Node(start[i],end[i]));
+      }
+      int count=1;
+      int prev=pq.poll().end;
+      while(pq.size()>0){
+          Node curr=pq.poll();
+      
+          if(curr.start>prev){
+              count++;
+              prev=curr.end;
+          }
+          
+      }
+      return count;
+    }
+    static class Node{
+        int start;
+        int end;
+        Node(int start,int end){
+            this.start=start;
+            this.end=end;
+        }
+    }
+}
