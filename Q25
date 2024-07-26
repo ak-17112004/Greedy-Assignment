@@ -1,0 +1,22 @@
+Given a string s containing only three types of characters: '(', ')' and '*', return true if s is valid.
+The following rules define a valid string:
+Any left parenthesis '(' must have a corresponding right parenthesis ')'.
+Any right parenthesis ')' must have a corresponding left parenthesis '('.
+Left parenthesis '(' must go before the corresponding right parenthesis ')'.
+'*' could be treated as a single right parenthesis ')' or a single left parenthesis '(' or an empty string "".
+ CODE:
+class Solution:
+    def checkValidString(self, s: str) -> bool:
+        lmin,lmax = 0,0
+        for c in s:
+            if c == "(":
+                lmin,lmax = lmin + 1, lmax + 1
+            elif c == ")":
+                lmin,lmax = lmin - 1,lmax - 1
+            else:
+                lmin,lmax = lmin - 1,lmax + 1
+            if lmax < 0:
+                return False
+            if lmin < 0:
+                lmin = 0
+        return lmin == 0
