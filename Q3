@@ -1,0 +1,25 @@
+Geekina got stuck on an island. There is only one shop on this island and it is open on all days of the week except for Sunday. Consider following constraints:
+-> N – The maximum unit of food you can buy each day.
+-> S – Number of days you are required to survive.
+-> M – Unit of food required each day to survive.
+Currently, it’s Monday, and she needs to survive for the next S days.
+Find the minimum number of days on which you need to buy food from the shop so that she can survive the next S days, or determine that it isn’t possible to survive.
+CODE:
+import math
+def can_survive(N, S, M):
+    total_food_required = S * M
+    
+    buying_days = S - (S // 7)
+    
+    if M > N or total_food_required > buying_days * N:
+        return "No, survival is not possible."
+    
+    min_days = math.ceil(total_food_required / N)
+    
+    return f"Yes, survival is possible. Minimum days to buy food: {min_days}"
+
+N = 16  
+S = 10 
+M = 2 
+
+print(can_survive(N, S, M))
