@@ -1,0 +1,19 @@
+Given arrival and departure times of all trains that reach a railway station. Find the minimum number of platforms required for the railway station so that no train is kept waiting.
+Consider that all the trains arrive on the same day and leave on the same day. Arrival and departure time 
+can never be the same for a train but we can have arrival time of one train equal to departure time of the other. At any given instance of time, 
+same platform can not be used for both departure of a train and arrival of another train. In such cases, we need different platforms.
+CODE:
+class Solution:    
+    def minimumPlatform(self,n,arr,dep):
+        a = d = count = max_count = 0
+        arr.sort()
+        dep.sort()
+        while a<len(arr) and d<len(dep):
+            if arr[a]<=dep[d]:
+                a+=1
+                count+=1
+            else:
+                d+=1
+                count-=1
+            max_count = max(count,max_count)
+        return max_count
